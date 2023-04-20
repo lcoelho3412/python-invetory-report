@@ -9,36 +9,38 @@ from inventory_report.reports.simple_report import SimpleReport
 class Inventory:
     @classmethod
     def import_data(cls, path, type):
-        if path.endswith(".json"):
-            with open(path, "r") as file:
+        with open(path, "r") as file:
+            if path.endswith(".json"):
                 products = json.load(file)
-        elif path.endswith(".csv"):
-            with open(path, "r") as file:
+            elif path.endswith(".csv"):
                 products = csv.DictReader(file, delimiter=",")
-                products = [dict(product) for product in products]
-        elif path.endswith(".xml"):
-            tree = ET.parse(path)
-            products_xml = tree.getroot()
-            products = [
-                {
-                    "id": product.find("id").text,
-                    "nome_do_produto": product.find("nome_do_produto").text,
-                    "nome_da_empresa": product.find("nome_da_empresa").text,
-                    "data_de_fabricacao": product.find(
-                        "data_de_fabricacao"
-                    ).text,
-                    "data_de_validade": product.find("data_de_validade").text,
-                    "numero_de_serie": product.find("numero_de_serie").text,
-                    "instrucoes_de_armazenamento": product.find(
-                        "instrucoes_de_armazenamento"
-                    ).text,
-                }
-                for product in products_xml
-            ]
-        else:
-            raise ValueError("Unsupported file type")
-
-        formatted_products = [product for product in products]
+            else:
+                products_xml = ET.parse(file).getroot()
+                products = [
+                    {
+                        "id": product.find("id").text,
+                        "nome_do_produto": product.find(
+                            "nome_do_produto"
+                        ).text,
+                        "nome_da_empresa": product.find(
+                            "nome_da_empresa"
+                        ).text,
+                        "data_de_fabricacao": product.find(
+                            "data_de_fabricacao"
+                        ).text,
+                        "data_de_validade": product.find(
+                            "data_de_validade"
+                        ).text,
+                        "numero_de_serie": product.find(
+                            "numero_de_serie"
+                        ).text,
+                        "instrucoes_de_armazenamento": product.find(
+                            "instrucoes_de_armazenamento"
+                        ).text,
+                    }
+                    for product in products_xml
+                ]
+            formatted_products = [product for product in products]
         if type == "simples":
             return SimpleReport.generate(formatted_products)
         elif type == "completo":
