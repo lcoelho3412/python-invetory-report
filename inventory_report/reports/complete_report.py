@@ -36,7 +36,7 @@ class CompleteReport:
             f"Empresa com mais produtos: {common_company[0][0]}\n"
             f"Produtos estocados por empresa:\n"
         )
-        print(data_format)
+
         for company in common_companies:
             data_format += f"- {company[0]}: {company[1]}\n"
         return data_format

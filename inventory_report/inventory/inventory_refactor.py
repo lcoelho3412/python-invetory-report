@@ -1,5 +1,5 @@
-from inventory_report.inventory.inventory_iterator import InventoryIterator
 from collections.abc import Iterable
+from inventory_report.inventory.inventory_iterator import InventoryIterator
 
 
 class InventoryRefactor(Iterable):
@@ -7,9 +7,9 @@ class InventoryRefactor(Iterable):
         self.importer = importer
         self.data = []
 
+    def import_data(self, path, type):
+        import_path = self.importer.import_data(path)
+        self.data += import_path
+
     def __iter__(self):
         return InventoryIterator(self.data)
-
-    def import_data(self, path, type):
-        data = self.importer.import_data(path)
-        self.data += data
